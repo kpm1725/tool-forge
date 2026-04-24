@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TOOL FORGE — parametric CAD from description</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=JetBrains+Mono:wght@400;500;700&family=Archivo:wght@400;600;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="grid-overlay" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <span class="brand-name">TOOL/FORGE</span>
+      <span class="brand-version">v0.1 · drafting bay</span>
+    </div>
+    <div class="status">
+      <span class="status-item {{ 'ok' if api_key_set else 'warn' }}">
+        <span class="dot"></span>API {{ 'linked' if api_key_set else 'missing key' }}
+      </span>
+      <span class="status-item {{ 'ok' if openscad_available else 'warn' }}">
+        <span class="dot"></span>OpenSCAD {{ 'online' if openscad_available else 'offline — .scad only' }}
+      </span>
+      <span class="status-item">
+        <span class="dot muted"></span>{{ model }}
+      </span>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section class="brief">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+
+      <div class="brief-head">
+        <span class="tag">01 / brief</span>
+        <h1>Describe the problem.<br/><span class="accent">I'll draft the tool.</span></h1>
+        <p class="sub">Be specific about what it mounts to, grips, aligns, measures, or holds. Call out dimensions you know. I'll pick sensible defaults for the rest.</p>
+      </div>
+
+      <textarea id="description"
+        placeholder="e.g. A clip that holds a 22 mm round shower hose against the tile wall using 3M tape on the back, with a gentle cam so the hose snaps in but doesn't fall out when pulled downward."
+        maxlength="4000"></textarea>
+
+      <div class="controls">
+        <div class="counter"><span id="count">0</span> / 4000</div>
+        <button id="generate" class="btn-forge">
+          <span class="btn-label">Forge</span>
+          <span class="btn-sub">⟶ parametric solid</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="output" id="output" hidden>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+
+      <div class="output-head">
+        <span class="tag">02 / output</span>
+        <div class="output-actions">
+          <a id="download-scad" class="btn-ghost" href="#" download>⬇ .scad</a>
+          <a id="download-stl" class="btn-ghost" href="#" download hidden>⬇ .stl</a>
+          <button id="copy" class="btn-ghost">copy</button>
+        </div>
+      </div>
+
+      <div id="stl-note" class="note" hidden></div>
+      <pre><code id="code"></code></pre>
+    </section>
+
+    <section id="status-panel" class="status-panel" hidden>
+      <div class="scan"></div>
+      <span id="status-text">drafting…</span>
+    </section>
+
+    <section id="error-panel" class="error-panel" hidden>
+      <span class="err-tag">fault</span>
+      <span id="error-text"></span>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>No CAD seats. Just coordinates and intent.</span>
+    <span>STL ready for your slicer.</span>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
