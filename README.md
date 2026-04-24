@@ -17,8 +17,7 @@ You need Python 3.10+ and, optionally but recommended, **OpenSCAD**.
 
 ```bash
 # from the project directory
-python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
